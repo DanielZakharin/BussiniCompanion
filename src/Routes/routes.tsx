@@ -1,37 +1,36 @@
 import { useQuery } from "@apollo/client";
 import { GET_ROUTES } from "../../apollographql/queries/routes";
-import { View, Text, ActivityIndicator, FlatList } from "react-native";
+import { View, Text, ActivityIndicator, FlatList, Pressable, ToastAndroid, TouchableOpacity } from "react-native";
 import { RouteData, RoutesData } from "./types";
 
 export default () => {
     const { error, loading, data } = useQuery<RoutesData>(GET_ROUTES)
 
-    if (loading) {
-        return <View>
-            <ActivityIndicator size="large" />
-        </View>
-    }
+    return <View>
 
-    if (error) {
-        const errorTxt = error.message
-        return <View>
-            <Text>Error!...</Text>
-            <Text>{errorTxt}</Text>
-        </View>
-    }
+        <RoutesHeader />
 
-    if (data) {
-        return <RoutesList routesData={data} />
-    }
+        {loading && <ActivityIndicator size="large" />}
 
-    return 'WTF??!'
+        {error && <Text>Error!<br />{error.message}</Text>}
+
+        {data && <RoutesList routesData={data} />}
+
+    </View >
+}
+
+const RoutesHeader = () => {
+    return <View style={{ padding: 8 }}>
+        <Text style={{ fontSize: 24, fontWeight: "bold" }}>Select Route</Text>
+    </View >
 }
 
 type RoutesListProps = { routesData: RoutesData }
 
 const RoutesList = ({ routesData }: RoutesListProps) => {
+    const sortedRoutes = sortRoutes(routesData.routes)
     return <FlatList
-        data={routesData.routes}
+        data={sortedRoutes}
         renderItem={({ item }) => <RouteRow routeData={item} />}
         keyExtractor={(item: RouteData) => item.gtfsId} />
 
@@ -40,10 +39,23 @@ const RoutesList = ({ routesData }: RoutesListProps) => {
 type RouteRowProps = { routeData: RouteData }
 
 const RouteRow = ({ routeData }: RouteRowProps) => {
-    return <View>
-        <Text>
-            {routeData.shortName}, {routeData.longName}
-        </Text>
-    </View>
+    return <TouchableOpacity onPress={() => {
+        // debug
+        ToastAndroid.show(`Pressed on route ${routeData.shortName}`, ToastAndroid.SHORT)
+    }}>
+        <View style={{ padding: 8 }}>
+            <Text>
+                <Text style={{ fontWeight: "bold" }}>{routeData.shortName}</Text>, {routeData.longName}
+            </Text>
+        </View>
+    </TouchableOpacity>
 
+}
+
+const sortRoutes = (routes: [RouteData]) => {
+    return routes.slice().sort((a, b) => {
+        const anum = parseInt(a.shortName, 10)
+        const bnum = parseInt(b.shortName, 10)
+        return anum - bnum
+    })
 }

@@ -5,58 +5,21 @@
  * @format
  */
 
-import { ApolloProvider } from '@apollo/client'
-import apolloClient from './apollographql/apolloclient'
-import Routes from './src/Routes/routes'
+import { ApolloProvider } from '@apollo/client';
 import React from 'react';
-import type { PropsWithChildren } from 'react'
 import {
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
-  useColorScheme,
-  View,
+  useColorScheme
 } from 'react-native';
+import apolloClient from './apollographql/apolloclient';
+import Routes from './src/Routes/routes';
 
+import { NavigationContainer } from '@react-navigation/native';
 import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
+  Colors
 } from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({ children, title }: SectionProps): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -67,24 +30,16 @@ function App(): JSX.Element {
 
   return (
     <ApolloProvider client={apolloClient}>
-      <SafeAreaView style={backgroundStyle}>
-        <StatusBar
-          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-          backgroundColor={backgroundStyle.backgroundColor}
-        />
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={backgroundStyle}>
-          <Header />
-          <View>
-            <Section title="Dingus is here">
-              This is my own bluushit here now
-            </Section>
-          </View>
+      <NavigationContainer>
+        <SafeAreaView style={backgroundStyle}>
+          <StatusBar
+            barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+            backgroundColor={backgroundStyle.backgroundColor}
+          />
           <Routes />
-        </ScrollView>
-      </SafeAreaView>
-    </ApolloProvider>
+        </SafeAreaView>
+      </NavigationContainer>
+    </ApolloProvider >
   );
 }
 
