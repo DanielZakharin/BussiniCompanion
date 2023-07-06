@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import { GET_ROUTES } from "../../apollographql/queries/routes";
 import { View, Text, ActivityIndicator, FlatList, Pressable, ToastAndroid, TouchableOpacity } from "react-native";
 import { RouteData, RoutesData } from "./types";
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 export default () => {
     const { error, loading, data } = useQuery<RoutesData>(GET_ROUTES)
@@ -43,8 +44,12 @@ const RouteRow = ({ routeData }: RouteRowProps) => {
         // debug
         ToastAndroid.show(`Pressed on route ${routeData.shortName}`, ToastAndroid.SHORT)
     }}>
-        <View style={{ padding: 8 }}>
-            <Text>
+        <View style={{
+            flexDirection: "row",
+            padding: 8,
+        }}>
+            <Icon name="directions-bus" size={20} />
+            <Text style={{ paddingStart: 12 }}>
                 <Text style={{ fontWeight: "bold" }}>{routeData.shortName}</Text>, {routeData.longName}
             </Text>
         </View>
