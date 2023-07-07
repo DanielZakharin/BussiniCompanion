@@ -1,48 +1,60 @@
 import { useQuery } from "@apollo/client";
+import { ActivityIndicator, FlatList, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { NavigationProps, NavigationScreens } from "../../App";
 import { GET_ROUTES } from "../../apollographql/queries/routes";
-import { View, Text, ActivityIndicator, FlatList, Pressable, ToastAndroid, TouchableOpacity } from "react-native";
+import Screenroot from "../../common/elements/screenroot";
+import StorageManager from '../../common/storage';
 import { RouteData, RoutesData } from "./types";
-import Icon from 'react-native-vector-icons/MaterialIcons'
-import StorageManager from '../../common/storage'
 
-export default () => {
+export default ({ navigation }: NavigationProps) => {
     const { error, loading, data } = useQuery<RoutesData>(GET_ROUTES)
 
-    return <View>
-
-        <RoutesHeader />
+    return <Screenroot>
 
         {loading && <ActivityIndicator size="large" />}
 
         {error && <Text>Error!<br />{error.message}</Text>}
 
-        {data && <RoutesList routesData={data} />}
+        {data && <RoutesList onRouteClick={
+            async (route) => {
+                console.log(`clicked route ${route.gtfsId}`)
+                if (await StorageManager.saveKeyValuePair('ROUTE_KEY', route.gtfsId)) {
+                    navigation.navigate(NavigationScreens.Pattern)
+                } else {
+                    console.log('Could not save to storage')
+                }
+            }
+        } routesData={data} />}
 
-    </View >
+    </Screenroot >
 }
 
+/*
 const RoutesHeader = () => {
     return <View style={{ padding: 8 }}>
         <Text style={{ fontSize: 24, fontWeight: "bold" }}>Select Route</Text>
     </View >
 }
+*/
 
-type RoutesListProps = { routesData: RoutesData }
+type RoutesListProps = { routesData: RoutesData, onRouteClick: (route: RouteData) => void }
 
-const RoutesList = ({ routesData }: RoutesListProps) => {
+const RoutesList = ({ onRouteClick, routesData }: RoutesListProps) => {
+
     const sortedRoutes = sortRoutes(routesData.routes)
     return <FlatList
         data={sortedRoutes}
-        renderItem={({ item }) => <RouteRow routeData={item} />}
+        renderItem={({ item }) => <RouteRow routeData={item} onRouteClick={onRouteClick} />}
         keyExtractor={(item: RouteData) => item.gtfsId} />
 
 }
 
-type RouteRowProps = { routeData: RouteData }
+type RouteRowProps = { routeData: RouteData, onRouteClick: (route: RouteData) => void }
 
-const RouteRow = ({ routeData }: RouteRowProps) => {
+const RouteRow = (props: RouteRowProps) => {
+    const { routeData, onRouteClick } = props
     return <TouchableOpacity onPress={async () => {
-        // debug
         await onRouteClick(routeData)
     }}>
         <View style={{
@@ -64,12 +76,4 @@ const sortRoutes = (routes: [RouteData]) => {
         const bnum = parseInt(b.shortName, 10)
         return anum - bnum
     })
-}
-
-const onRouteClick = async (route: RouteData) => {
-    if(await StorageManager.saveKeyValuePair('ROUTE_KEY', route.gtfsId)) {
-        // debug only 
-        const valueInStorage = await StorageManager.readKeyValuePair('ROUTE_KEY')
-        ToastAndroid.show(`s ${valueInStorage}, v ${route.gtfsId}`, ToastAndroid.SHORT)
-    }
 }

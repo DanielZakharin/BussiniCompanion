@@ -12,6 +12,7 @@
   "dependencies": {
     "@apollo/client": "^3.7.16",
     "@react-native-async-storage/async-storage": "^1.19.0",
+    "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/native-stack": "^6.9.13",
     "graphql": "^16.7.1",
@@ -20,7 +21,8 @@
     "react-native-dotenv": "^3.4.9",
     "react-native-safe-area-context": "^4.6.4",
     "react-native-screens": "^3.22.1",
-    "react-native-vector-icons": "^9.2.0"
+    "react-native-vector-icons": "^9.2.0",
+    "react-navigation-stack": "^2.10.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -8,18 +8,33 @@
 import { ApolloProvider } from '@apollo/client';
 import React from 'react';
 import {
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
   useColorScheme
 } from 'react-native';
 import apolloClient from './apollographql/apolloclient';
+import Pattern from './src/Pattern/pattern';
 import Routes from './src/Routes/routes';
 
 import { NavigationContainer } from '@react-navigation/native';
+import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
   Colors
 } from 'react-native/Libraries/NewAppScreen';
+
+// NAVIGATION
+
+export enum NavigationScreens {
+  Routes = 'Routes',
+  Pattern = 'Pattern'
+}
+
+type ParamList = {
+  Routes: undefined,
+  Pattern: undefined,
+}
+
+export type NavigationProps = NativeStackScreenProps<ParamList, NavigationScreens.Routes>
+
+// APP
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -28,38 +43,18 @@ function App(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  const Stack = createNativeStackNavigator()
+
   return (
     <ApolloProvider client={apolloClient}>
       <NavigationContainer>
-        <SafeAreaView style={backgroundStyle}>
-          <StatusBar
-            barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-            backgroundColor={backgroundStyle.backgroundColor}
-          />
-          <Routes />
-        </SafeAreaView>
+        <Stack.Navigator>
+          <Stack.Screen name={NavigationScreens.Routes} component={Routes} options={{ title: "Select Route" }} />
+          <Stack.Screen name={NavigationScreens.Pattern} component={Pattern} options={{ title: "Select Direction" }} />
+        </Stack.Navigator>
       </NavigationContainer>
     </ApolloProvider >
   );
 }
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;
