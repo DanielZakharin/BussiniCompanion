@@ -3,6 +3,7 @@ import { GET_ROUTES } from "../../apollographql/queries/routes";
 import { View, Text, ActivityIndicator, FlatList, Pressable, ToastAndroid, TouchableOpacity } from "react-native";
 import { RouteData, RoutesData } from "./types";
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import StorageManager from '../../common/storage'
 
 export default () => {
     const { error, loading, data } = useQuery<RoutesData>(GET_ROUTES)
@@ -40,9 +41,9 @@ const RoutesList = ({ routesData }: RoutesListProps) => {
 type RouteRowProps = { routeData: RouteData }
 
 const RouteRow = ({ routeData }: RouteRowProps) => {
-    return <TouchableOpacity onPress={() => {
+    return <TouchableOpacity onPress={async () => {
         // debug
-        ToastAndroid.show(`Pressed on route ${routeData.shortName}`, ToastAndroid.SHORT)
+        await onRouteClick(routeData)
     }}>
         <View style={{
             flexDirection: "row",
@@ -63,4 +64,12 @@ const sortRoutes = (routes: [RouteData]) => {
         const bnum = parseInt(b.shortName, 10)
         return anum - bnum
     })
+}
+
+const onRouteClick = async (route: RouteData) => {
+    if(await StorageManager.saveKeyValuePair('ROUTE_KEY', route.gtfsId)) {
+        // debug only 
+        const valueInStorage = await StorageManager.readKeyValuePair('ROUTE_KEY')
+        ToastAndroid.show(`s ${valueInStorage}, v ${route.gtfsId}`, ToastAndroid.SHORT)
+    }
 }
