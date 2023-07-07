@@ -1,11 +1,11 @@
 import { useQuery } from "@apollo/client";
 import { ActivityIndicator, FlatList, Text } from "react-native";
-import { NavigationProps, NavigationScreens } from "../../App";
 import { GET_ROUTES } from "../../apollographql/queries/routes";
-import Screenroot from "../../common/elements/screenroot";
-import { SelectionRow } from "../../common/elements/selectionrow";
-import StorageManager from '../../common/storage';
+import Screenroot from "../common/elements/screenroot";
+import { SelectionRow } from "../common/elements/selectionrow";
+import StorageManager from '../common/storage';
 import { RouteData, RoutesData } from "./types";
+import { NavigationProps, NavigationScreens } from "../common/navigation/navigation";
 
 export default ({ navigation }: NavigationProps) => {
     const { error, loading, data } = useQuery<RoutesData>(GET_ROUTES)

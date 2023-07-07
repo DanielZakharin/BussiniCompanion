@@ -1,18 +1,27 @@
 import { FlatList, Text } from "react-native"
-import { NavigationProps } from "../../App"
-import Screenroot from "../../common/elements/screenroot"
-import { SelectionRow } from "../../common/elements/selectionrow"
+import Screenroot from "../common/elements/screenroot"
+import { SelectionRow } from "../common/elements/selectionrow"
+import { NavigationParamList, NavigationProps, NavigationScreens } from "../common/navigation/navigation"
+import { NativeStackScreenProps } from "@react-navigation/native-stack"
+import StorageManager from '../common/storage'
+import { makeGtfsId } from "../common/utils"
 
-export default ({ navigation, route }: NavigationProps) => {
+export type PatternNavProps = NativeStackScreenProps<NavigationParamList, NavigationScreens.Pattern>
+
+export default ({ navigation, route }: PatternNavProps) => {
     const selectedRoute = route.params?.selectedRoute
-    console.log(`props ${selectedRoute}`)
     return <Screenroot>
         <FlatList data={selectedRoute?.patterns}
             renderItem={({ item }) =>
                 <SelectionRow
                     onClick={async () => {
                         console.log(`selected pattern ${JSON.stringify(item)}`)
-                        console.log(`full gtfsId so far ${selectedRoute?.gtfsId}:${item.directionId}`)
+                        const gtfsIdSoFar =  makeGtfsId(selectedRoute.gtfsId, item.directionId.toString())
+                        console.log(`full gtfsId so far ${gtfsIdSoFar}`)
+                        if (await StorageManager.saveKeyValuePair('PATTERN_KEY', item.directionId.toString())) {
+                            navigation.navigate('Stop', { selectedRoutePatternGtfsId: gtfsIdSoFar })
+                        }
+
                     }}
                     iconName="swap-horiz" >
                     <Text>{item.headsign}</Text>

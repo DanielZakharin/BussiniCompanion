@@ -1,9 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
 
 import { ApolloProvider } from '@apollo/client';
 import React from 'react';
@@ -13,30 +7,14 @@ import {
 import apolloClient from './apollographql/apolloclient';
 import Pattern from './src/Pattern/pattern';
 import Routes from './src/Routes/routes';
+import Stop from './src/Stop/stop';
 
 import { NavigationContainer } from '@react-navigation/native';
-import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
   Colors
 } from 'react-native/Libraries/NewAppScreen';
-import { RouteData } from './src/Routes/types';
-import { PatternScreenProps } from './src/Pattern/types';
-
-// NAVIGATION
-
-export enum NavigationScreens {
-  Routes = 'Routes',
-  Pattern = 'Pattern'
-}
-
-type ParamList = {
-  Routes: undefined,
-  Pattern: PatternScreenProps,
-}
-
-export type NavigationProps = NativeStackScreenProps<ParamList, NavigationScreens>
-
-// APP
+import { NavigationParamList, NavigationScreens } from './src/common/navigation/navigation';
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -45,7 +23,7 @@ function App(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  const Stack = createNativeStackNavigator<ParamList>()
+  const Stack = createNativeStackNavigator<NavigationParamList>()
 
   return (
     <ApolloProvider client={apolloClient}>
@@ -53,6 +31,7 @@ function App(): JSX.Element {
         <Stack.Navigator initialRouteName='Routes'>
           <Stack.Screen name={NavigationScreens.Routes} component={Routes} options={{ title: "Select Route" }} />
           <Stack.Screen name={NavigationScreens.Pattern} component={Pattern} options={{ title: "Select Direction" }} />
+          <Stack.Screen name={NavigationScreens.Stop} component={Stop} options={{ title: "Select Stop" }} />
         </Stack.Navigator>
       </NavigationContainer>
     </ApolloProvider >

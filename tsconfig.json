@@ -2,7 +2,7 @@
   "compilerOptions": {
     "typeRoots": [
       "./node_modules/@types",
-      "./types"
+      "src/common/types"
     ],
   },
   "extends": "@tsconfig/react-native/tsconfig.json"
