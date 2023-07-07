@@ -1,9 +1,9 @@
 import { useQuery } from "@apollo/client";
-import { ActivityIndicator, FlatList, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { ActivityIndicator, FlatList, Text } from "react-native";
 import { NavigationProps, NavigationScreens } from "../../App";
 import { GET_ROUTES } from "../../apollographql/queries/routes";
 import Screenroot from "../../common/elements/screenroot";
+import { SelectionRow } from "../../common/elements/selectionrow";
 import StorageManager from '../../common/storage';
 import { RouteData, RoutesData } from "./types";
 
@@ -14,7 +14,9 @@ export default ({ navigation }: NavigationProps) => {
 
         {loading && <ActivityIndicator size="large" />}
 
-        {error && <Text>Error!<br />{error.message}</Text>}
+        {error && <Text>Error!
+            {error.message}
+        </Text>}
 
         {data && <RoutesList onRouteClick={
             async (route) => {
@@ -57,19 +59,12 @@ type RouteRowProps = { routeData: RouteData, onRouteClick: (route: RouteData) =>
 
 const RouteRow = (props: RouteRowProps) => {
     const { routeData, onRouteClick } = props
-    return <TouchableOpacity onPress={async () => {
-        await onRouteClick(routeData)
-    }}>
-        <View style={{
-            flexDirection: "row",
-            padding: 8,
-        }}>
-            <Icon name="directions-bus" size={20} />
-            <Text style={{ paddingStart: 12 }}>
-                <Text style={{ fontWeight: "bold" }}>{routeData.shortName}</Text>, {routeData.longName}
-            </Text>
-        </View>
-    </TouchableOpacity>
+    const innerText = () => { return <Text><Text style={{ fontWeight: "bold" }}>{routeData.shortName}</Text>, {routeData.longName}</Text > }
+    return <SelectionRow
+        onClick={async () => { return await onRouteClick(routeData) }}
+        iconName="directions-bus">
+        <Text style={{ fontWeight: "bold" }}>{routeData.shortName}</Text>, {routeData.longName}
+    </SelectionRow>
 
 }
 
