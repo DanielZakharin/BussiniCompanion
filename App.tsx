@@ -19,6 +19,8 @@ import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navig
 import {
   Colors
 } from 'react-native/Libraries/NewAppScreen';
+import { RouteData } from './src/Routes/types';
+import { PatternScreenProps } from './src/Pattern/types';
 
 // NAVIGATION
 
@@ -29,10 +31,10 @@ export enum NavigationScreens {
 
 type ParamList = {
   Routes: undefined,
-  Pattern: undefined,
+  Pattern: PatternScreenProps,
 }
 
-export type NavigationProps = NativeStackScreenProps<ParamList, NavigationScreens.Routes>
+export type NavigationProps = NativeStackScreenProps<ParamList, NavigationScreens>
 
 // APP
 
@@ -43,12 +45,12 @@ function App(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  const Stack = createNativeStackNavigator()
+  const Stack = createNativeStackNavigator<ParamList>()
 
   return (
     <ApolloProvider client={apolloClient}>
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator initialRouteName='Routes'>
           <Stack.Screen name={NavigationScreens.Routes} component={Routes} options={{ title: "Select Route" }} />
           <Stack.Screen name={NavigationScreens.Pattern} component={Pattern} options={{ title: "Select Direction" }} />
         </Stack.Navigator>

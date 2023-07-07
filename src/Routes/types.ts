@@ -1,4 +1,4 @@
-
+import { Pattern } from "../Pattern/types"
 
 export type RoutesData = {
     routes: [RouteData]
@@ -9,9 +9,4 @@ export type RouteData = {
     shortName: string
     longName: string
     patterns: [Pattern]
-}
-
-export type Pattern = {
-    directionId: any
-    headsign: string
 }

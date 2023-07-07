@@ -20,7 +20,10 @@ export default ({ navigation }: NavigationProps) => {
             async (route) => {
                 console.log(`clicked route ${route.gtfsId}`)
                 if (await StorageManager.saveKeyValuePair('ROUTE_KEY', route.gtfsId)) {
-                    navigation.navigate(NavigationScreens.Pattern)
+                    console.log(`should pass ${JSON.stringify(route)}`)
+                    navigation.navigate(NavigationScreens.Pattern, {
+                        selectedRoute: route
+                    })
                 } else {
                     console.log('Could not save to storage')
                 }
