@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack"
 import { PatternScreenProps } from "../../Pattern/types"
-import { StopScreenProps } from "../../Stop/types"
+import { StopScreenProps } from "../../Stops/types"
 
 
 export enum NavigationScreens {

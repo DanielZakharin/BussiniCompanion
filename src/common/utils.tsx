@@ -3,5 +3,5 @@ export const makeGtfsId = (
     direction?: string,
     stop?: string
 ): string => {
-    return `${!!route ? route + ':' : ''}${direction ? direction + ':' : ''}${stop ? stop + ':' : ''}`
+    return `${route ? route : ''}${direction ? ':' + direction : ''}${stop ? ':' + stop : ''}`
 }

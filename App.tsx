@@ -7,7 +7,7 @@ import {
 import apolloClient from './apollographql/apolloclient';
 import Pattern from './src/Pattern/pattern';
 import Routes from './src/Routes/routes';
-import Stop from './src/Stop/stop';
+import Stops from './src/Stops/stops';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -31,7 +31,7 @@ function App(): JSX.Element {
         <Stack.Navigator initialRouteName='Routes'>
           <Stack.Screen name={NavigationScreens.Routes} component={Routes} options={{ title: "Select Route" }} />
           <Stack.Screen name={NavigationScreens.Pattern} component={Pattern} options={{ title: "Select Direction" }} />
-          <Stack.Screen name={NavigationScreens.Stop} component={Stop} options={{ title: "Select Stop" }} />
+          <Stack.Screen name={NavigationScreens.Stop} component={Stops} options={{ title: "Select Stop" }} />
         </Stack.Navigator>
       </NavigationContainer>
     </ApolloProvider >

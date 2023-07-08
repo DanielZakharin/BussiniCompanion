@@ -16,7 +16,8 @@ export default ({ navigation, route }: PatternNavProps) => {
                 <SelectionRow
                     onClick={async () => {
                         console.log(`selected pattern ${JSON.stringify(item)}`)
-                        const gtfsIdSoFar =  makeGtfsId(selectedRoute.gtfsId, item.directionId.toString())
+                        // hard code 01 for pattern variant
+                        const gtfsIdSoFar = makeGtfsId(selectedRoute.gtfsId, item.directionId.toString(), '01')
                         console.log(`full gtfsId so far ${gtfsIdSoFar}`)
                         if (await StorageManager.saveKeyValuePair('PATTERN_KEY', item.directionId.toString())) {
                             navigation.navigate('Stop', { selectedRoutePatternGtfsId: gtfsIdSoFar })
