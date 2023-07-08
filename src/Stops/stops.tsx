@@ -20,7 +20,11 @@ export default ({ navigation, route }: StopNavProps) => {
 
     const onStopClicked = async (item: StopData) => {
         console.log(`Clicked ${JSON.stringify(item)}`)
-        if (await StorageManager.saveKeyValuePair('STOP_GTFS_ID_KEY', item.gtfsId)) {
+        const writeStorageSuccess = (await Promise.all([
+            StorageManager.saveKeyValuePair('STOP_ID_KEY', item.gtfsId),
+            StorageManager.saveKeyValuePair('PATTERN_GTFS_ID_KEY', selectedRoutePatternGtfsId)
+        ])).every((res) => res)
+        if (writeStorageSuccess) {
             // navigate to stop display, drop previous screens from stack
             navigation.dispatch(
                 CommonActions.reset(
@@ -32,6 +36,8 @@ export default ({ navigation, route }: StopNavProps) => {
                     }
                 )
             )
+        } else {
+            // TODO show error
         }
     }
 
