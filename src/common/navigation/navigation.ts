@@ -6,13 +6,13 @@ import { StopScreenProps } from "../../Stops/types"
 export enum NavigationScreens {
     Routes = 'Routes',
     Pattern = 'Pattern',
-    Stop = 'Stop'
+    Stop = 'Stop',
+    StopDisplay = 'StopDisplay'
 }
 
 export type NavigationParamList = {
     Routes: undefined,
     Pattern: PatternScreenProps,
     Stop: StopScreenProps
+    StopDisplay: undefined
 }
-
-export type NavigationProps = NativeStackScreenProps<NavigationParamList, NavigationScreens>

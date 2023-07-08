@@ -1,11 +1,13 @@
 import { ActivityIndicator, FlatList, Text } from "react-native";
 import Screenroot from "../common/elements/screenroot";
-import { NavigationParamList, NavigationProps, NavigationScreens } from "../common/navigation/navigation";
+import { NavigationParamList, NavigationScreens } from "../common/navigation/navigation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useQuery } from "@apollo/client";
 import { GET_PATTERN } from "../../apollographql/queries/pattern";
 import { StopData, StopsData, StopsWrapper } from "./types";
 import { SelectionRow } from "../common/elements/selectionrow";
+import StorageManager from "../common/storage"
+import { CommonActions } from "@react-navigation/native";
 
 export type StopNavProps = NativeStackScreenProps<NavigationParamList, NavigationScreens.Stop>
 
@@ -15,6 +17,24 @@ export default ({ navigation, route }: StopNavProps) => {
     const { loading, data, error } = useQuery<StopsWrapper>(GET_PATTERN, {
         variables: { id: selectedRoutePatternGtfsId },
     })
+
+    const onStopClicked = async (item: StopData) => {
+        console.log(`Clicked ${JSON.stringify(item)}`)
+        if (await StorageManager.saveKeyValuePair('STOP_GTFS_ID_KEY', item.gtfsId)) {
+            // navigate to stop display, drop previous screens from stack
+            navigation.dispatch(
+                CommonActions.reset(
+                    {
+                        index: 0,
+                        routes: [
+                            { name: NavigationScreens.StopDisplay },
+                        ],
+                    }
+                )
+            )
+        }
+    }
+
     return <Screenroot >
 
         {loading && <ActivityIndicator size="large" />}
@@ -23,20 +43,20 @@ export default ({ navigation, route }: StopNavProps) => {
             {error.message}
         </Text>}
 
-        {data && <StopsList stopsData={data.pattern} />}
+        {data && <StopsList stopsData={data.pattern} onStopClicked={onStopClicked} />}
     </Screenroot>
 }
 
-const StopsList = ({ stopsData }: { stopsData: StopsData }) => {
+const StopsList = ({ stopsData, onStopClicked }: { stopsData: StopsData, onStopClicked: (item: StopData) => void }) => {
     return <FlatList
         data={stopsData.stops}
-        renderItem={({ item }) => <StopItem item={item} />}
+        renderItem={({ item }) => <StopItem item={item} onStopClicked={onStopClicked} />}
     />
 }
 
-const StopItem = ({ item }: { item: StopData }) => {
+const StopItem = ({ item, onStopClicked }: { item: StopData, onStopClicked: (item: StopData) => void }) => {
     return <SelectionRow onClick={async () => {
-        console.log(`Clicked ${JSON.stringify(item)}`)
+        onStopClicked(item)
     }} iconName="bus-stop-covered">
         <Text >{item.name}</Text>
     </SelectionRow>

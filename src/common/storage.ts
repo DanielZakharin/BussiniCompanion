@@ -1,8 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 enum StorageKeysEnum {
-    'ROUTE_KEY',
-    'PATTERN_KEY'
+    'STOP_GTFS_ID_KEY'
 }
 
 type StorageKey = keyof typeof StorageKeysEnum

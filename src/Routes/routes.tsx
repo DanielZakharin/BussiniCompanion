@@ -19,16 +19,10 @@ export default ({ navigation }: NavigationProps) => {
         </Text>}
 
         {data && <RoutesList onRouteClick={
-            async (route) => {
-                console.log(`clicked route ${route.gtfsId}`)
-                if (await StorageManager.saveKeyValuePair('ROUTE_KEY', route.gtfsId)) {
-                    console.log(`should pass ${JSON.stringify(route)}`)
-                    navigation.navigate(NavigationScreens.Pattern, {
-                        selectedRoute: route
-                    })
-                } else {
-                    console.log('Could not save to storage')
-                }
+            (route) => {
+                navigation.navigate(NavigationScreens.Pattern, {
+                    selectedRoute: route
+                })
             }
         } routesData={data} />}
 
